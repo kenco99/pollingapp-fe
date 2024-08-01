@@ -96,37 +96,39 @@ const Dashboard = () => {
     if (error) return <div className="text-center py-4 text-red-500">Error: {error}</div>;
 
     return (
-        <div className="w-full px-4 py-8">
-            <h1 className="text-2xl font-bold mb-4">Teacher's Question Dashboard</h1>
-            <div className="w-full overflow-x-auto">
-                <table className="w-full table-auto">
-                    <thead className="bg-gray-50">
-                    <tr>
-                        {columns.map((column) => (
-                            <th key={column} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                {column}
-                            </th>
-                        ))}
-                    </tr>
-                    </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
-                    {questions.map((question) => (
-                        <tr key={question.id}>
+        <div className="flex flex-col h-screen">
+            <h1 className="text-2xl font-bold p-4">Teacher's Question Dashboard</h1>
+            <div className="flex-grow overflow-auto">
+                <div className="inline-block min-w-full align-middle">
+                    <table className="min-w-full divide-y divide-gray-200">
+                        <thead className="bg-gray-50">
+                        <tr>
                             {columns.map((column) => (
-                                <td key={`${question.id}-${column}`} className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    {column === 'options' ? (
-                                        <DropdownContent items={question[column]} columns={optionColumns} />
-                                    ) : column === 'submissions' ? (
-                                        <DropdownContent items={question[column]} columns={submissionColumns} />
-                                    ) : (
-                                        String(question[column] || 'N/A')
-                                    )}
-                                </td>
+                                <th key={column} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sticky top-0 bg-gray-50">
+                                    {column}
+                                </th>
                             ))}
                         </tr>
-                    ))}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody className="bg-white divide-y divide-gray-200">
+                        {questions.map((question) => (
+                            <tr key={question.id}>
+                                {columns.map((column) => (
+                                    <td key={`${question.id}-${column}`} className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        {column === 'options' ? (
+                                            <DropdownContent items={question[column]} columns={optionColumns} />
+                                        ) : column === 'submissions' ? (
+                                            <DropdownContent items={question[column]} columns={submissionColumns} />
+                                        ) : (
+                                            String(question[column] || 'N/A')
+                                        )}
+                                    </td>
+                                ))}
+                            </tr>
+                        ))}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     );
