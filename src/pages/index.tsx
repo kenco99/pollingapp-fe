@@ -2,6 +2,7 @@ import React, { useEffect, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
 import { isTeacherOnlineAPI } from '../api';
+import ChatPopup from './components/chatPopup';
 
 const UserSelectionPage: React.FC = () => {
     const dispatch = useAppDispatch();
@@ -43,7 +44,7 @@ const UserSelectionPage: React.FC = () => {
     };
 
     const handleTeacherSelection = () => {
-        if (!isTeacherOnline && user_type !== 'teacher') {
+        if (!isTeacherOnline) {
             dispatch({ type: 'teacher-signup' })
             router.push('/create-poll');
         }
@@ -71,6 +72,7 @@ const UserSelectionPage: React.FC = () => {
                     I am Teacher
                 </button>
             </div>
+            <ChatPopup />
         </div>
     );
 };

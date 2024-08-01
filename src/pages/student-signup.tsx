@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useAppSelector } from '../hooks/reduxHooks';
 import {useDispatch} from "react-redux";
+import ChatPopup from './components/chatPopup';
 
 const StudentSignupPage: React.FC = () => {
     const router = useRouter();
@@ -61,6 +62,7 @@ const StudentSignupPage: React.FC = () => {
                     {isLoading ? 'Processing...' : 'Continue'}
                 </button>
             </form>
+            <ChatPopup />
         </div>
     );
 };

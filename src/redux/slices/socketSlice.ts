@@ -20,6 +20,12 @@ interface Answer {
     options_db: QuestionOption[]
 }
 
+interface Message {
+    sender: string;
+    text: string;
+    timestamp: number;
+}
+
 interface SocketState {
     isConnected: boolean;
     isTeacherOnline: boolean;
@@ -29,6 +35,7 @@ interface SocketState {
     user_id: string | null;
     user_type: 'teacher' | 'student' | null;
     user_name: string | null;
+    messages: Message[];
 }
 
 const initialState: SocketState = {
@@ -39,7 +46,8 @@ const initialState: SocketState = {
     tabID: null,
     user_id: null,
     user_type: null,
-    user_name: null
+    user_name: null,
+    messages: []
 };
 
 const socketSlice = createSlice({
@@ -74,6 +82,9 @@ const socketSlice = createSlice({
                 state.answer = action.payload?.answer
             }
         },
+        addMessage: (state, action: PayloadAction<Message>) => {
+            state.messages.push(action.payload);
+        },
     },
 });
 
@@ -81,7 +92,8 @@ export const { connected,
     disconnected,
     setUser,
     setTeacherStatus,
-    setQuestion
+    setQuestion,
+    addMessage
 } = socketSlice.actions;
 
 export default socketSlice.reducer;

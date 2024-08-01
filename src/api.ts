@@ -33,4 +33,14 @@ export const getPollData = async (tabID: string): Promise<any> => {
     }
 };
 
+export const getSubmissionsData = async (tabID: string): Promise<any> => {
+    try {
+        const response = await axiosInstance.get(`/pollapp/submissions?tabID=${tabID}`);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching submissions data:', error);
+        throw error;
+    }
+};
+
 export default axiosInstance;

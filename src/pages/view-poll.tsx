@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import { getPollData } from '../api';
+import ChatPopup from './components/chatPopup';
 
 const ViewPoll = () => {
     const dispatch = useDispatch();
@@ -97,6 +98,7 @@ const ViewPoll = () => {
                 >
                     Ask Another Question
                 </button>
+                <ChatPopup />
             </div>
         );
     }
@@ -138,6 +140,7 @@ const ViewPoll = () => {
                     Ask Another Question
                 </button>
             </div>
+            <ChatPopup />
         </div>
     );
 };

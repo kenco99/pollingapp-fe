@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getPollData } from '../api';
+import ChatPopup from './components/chatPopup';
 
 const PollPage = () => {
     const dispatch = useDispatch();
@@ -24,7 +25,6 @@ const PollPage = () => {
                 }
                 setLoading(false);
             } catch (err) {
-                setError('Failed to fetch poll data: ' + err.message);
                 setLoading(false);
             }
         };
@@ -85,6 +85,7 @@ const PollPage = () => {
         return (
             <div className="flex items-center justify-center h-screen">
                 <p className="text-xl">Waiting for teacher to ask question...</p>
+                <ChatPopup />
             </div>
         );
     }
@@ -129,6 +130,7 @@ const PollPage = () => {
                 >
                     Submit
                 </button>
+                <ChatPopup />
             </div>
         );
     }
@@ -160,6 +162,7 @@ const PollPage = () => {
                         </div>
                     ))}
                 </div>
+                <ChatPopup />
             </div>
         );
     }

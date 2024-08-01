@@ -1,6 +1,6 @@
 import { Middleware } from 'redux';
 import { io, Socket } from 'socket.io-client';
-import {connected, disconnected, setQuestion, setTeacherStatus, setUser} from '../slices/socketSlice';
+import {connected, disconnected, setQuestion, setTeacherStatus, setUser, addMessage} from '../slices/socketSlice';
 
 const socketMiddleware: Middleware = (store) => {
     let socket: Socket;
@@ -30,6 +30,10 @@ const socketMiddleware: Middleware = (store) => {
 
                 socket.on('current-poll', (question:any) => {
                     store.dispatch(setQuestion(question));
+                });
+
+                socket.on('chat-message', (message: any) => {
+                    store.dispatch(addMessage(message));
                 });
 
                 break;
@@ -77,6 +81,12 @@ const socketMiddleware: Middleware = (store) => {
             case 'reset-poll':
                 if (socket) {
                     socket.emit('reset-poll');
+                }
+                break;
+
+            case 'send-message':
+                if (socket) {
+                    socket.emit('send-message', action.payload);
                 }
                 break;
 

@@ -1,6 +1,8 @@
-import React, {useEffect, useState} from 'react';
+import React, { useState } from 'react';
+import { PlusCircle, Trash2, Clock, ArrowRight } from 'lucide-react';
 import { useAppDispatch, useAppSelector } from '../hooks/reduxHooks';
-import {useRouter} from "next/router";
+import {useRouter} from 'next/router';
+import ChatPopup from './components/chatPopup';
 
 interface Option {
     text: string;
@@ -42,6 +44,10 @@ const CreatePoll: React.FC = () => {
         setOptions([...options, { text: '', isCorrect: false }]);
     };
 
+    const goToDashboard = () => {
+        router.push('/dashboard');
+    };
+
     const removeOption = (index: number) => {
         setOptions(options.filter((_, idx) => idx !== index));
     };
@@ -74,68 +80,89 @@ const CreatePoll: React.FC = () => {
                 <p className="text-xl">You do not have access to create a question</p>
             </div>
         );
-    }else{
-        return (
-            <div className="flex flex-col items-center p-6">
-                <h1 className="text-2xl font-bold mb-4">Enter question and options</h1>
-                <textarea
-                    value={question}
-                    onChange={handleQuestionChange}
-                    placeholder="Enter..."
-                    className="w-full p-2 border border-gray-300 rounded mb-4"
-                    rows={4}
-                />
+    }
+
+    return (
+        <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-lg">
+            <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">Create a Poll</h1>
+            <div className="space-y-4">
+                <div>
+                    <label htmlFor="question" className="block text-sm font-medium text-gray-700 mb-1">
+                        Question
+                    </label>
+                    <textarea
+                        id="question"
+                        value={question}
+                        onChange={handleQuestionChange}
+                        placeholder="Enter your question..."
+                        className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                        rows={3}
+                    />
+                </div>
                 {options.map((option, index) => (
-                    <div key={index} className="flex items-center mb-2 w-full">
+                    <div key={index} className="flex items-center space-x-2">
                         <input
                             type="text"
                             value={option.text}
                             onChange={(e) => handleOptionChange(index, e.target.value)}
-                            placeholder="Option"
-                            className="flex-grow p-2 border border-gray-300 rounded mr-2"
+                            placeholder={`Option ${index + 1}`}
+                            className="flex-grow p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
                         />
-                        <input
-                            type="checkbox"
-                            checked={option.isCorrect}
-                            onChange={() => handleCorrectChange(index, !option.isCorrect)}
-                            className="mr-2"
-                        />
-                        <label className="mr-2">Is correct?</label>
+                        <label className="flex items-center space-x-2 cursor-pointer">
+                            <input
+                                type="checkbox"
+                                checked={option.isCorrect}
+                                onChange={() => handleCorrectChange(index, !option.isCorrect)}
+                                className="form-checkbox h-5 w-5 text-blue-600 transition duration-150 ease-in-out"
+                            />
+                            <span className="text-sm text-gray-700">Correct</span>
+                        </label>
                         <button
                             onClick={() => removeOption(index)}
-                            className="bg-red-500 text-white px-2 py-1 rounded"
+                            className="p-2 text-red-600 hover:text-red-800 transition"
                         >
-                            Remove
+                            <Trash2 size={18} />
                         </button>
                     </div>
                 ))}
-                {error && <p className="text-red-500 mb-4">{error}</p>}
-                <div className="flex justify-between w-full mt-4">
+                {error && <p className="text-red-500 text-sm">{error}</p>}
+                <button
+                    onClick={addOption}
+                    className="flex items-center space-x-2 text-blue-600 hover:text-blue-800 transition"
+                >
+                    <PlusCircle size={18} />
+                    <span>Add another option</span>
+                </button>
+                <div className="flex items-center space-x-2">
+                    <Clock size={18} className="text-gray-600" />
+                    <input
+                        type="number"
+                        value={maximumTime}
+                        onChange={handleMaximumTimeChange}
+                        placeholder="Time (seconds)"
+                        className="flex-grow p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+                    />
+                </div>
+                <div className="flex justify-between pt-4">
                     <button
-                        onClick={addOption}
-                        className="bg-blue-500 text-white px-4 py-2 rounded mr-2"
+                        onClick={goToDashboard}
+                        className="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300 transition flex items-center space-x-2"
                     >
-                        Add another option +
+                        <span>Dashboard</span>
+                        <ArrowRight size={18} />
                     </button>
-                    <div className="flex items-center px-4 rounded">
-                        <input
-                            type="number"
-                            value={maximumTime}
-                            onChange={handleMaximumTimeChange}
-                            placeholder="Time (seconds)"
-                            className="flex-grow p-2 border border-gray-300 rounded mr-2"
-                        />
-                    </div>
                     <button
                         onClick={handleSubmit}
-                        className="bg-green-500 text-white px-4 py-2 rounded"
+                        className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition flex items-center space-x-2"
                     >
-                        Ask question →
+                        <span>Ask question</span>
+                        <ArrowRight size={18} />
                     </button>
                 </div>
             </div>
-        );
-    }
+            <ChatPopup />
+        </div>
+    );
 };
 
 export default CreatePoll;
