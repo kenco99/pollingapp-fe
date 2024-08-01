@@ -14,10 +14,10 @@ interface Question {
     options_db: QuestionOption[]
 }
 
-interface Answer {
-    id: string;
-    question_text: string;
-    options_db: QuestionOption[]
+interface User {
+    socket_id: string;
+    uuid: string;
+    name: string;
 }
 
 interface Message {
@@ -36,6 +36,9 @@ interface SocketState {
     user_type: 'teacher' | 'student' | null;
     user_name: string | null;
     messages: Message[];
+    usersOnline: User[];
+    pollCount: number;
+    kicked: boolean;
 }
 
 const initialState: SocketState = {
@@ -47,7 +50,10 @@ const initialState: SocketState = {
     user_id: null,
     user_type: null,
     user_name: null,
-    messages: []
+    messages: [],
+    usersOnline: [],
+    pollCount: 0,
+    kicked: false,
 };
 
 const socketSlice = createSlice({
@@ -85,6 +91,15 @@ const socketSlice = createSlice({
         addMessage: (state, action: PayloadAction<Message>) => {
             state.messages.push(action.payload);
         },
+        setUsersOnline: (state, action: PayloadAction<User[]>) => {
+            state.usersOnline = action.payload;
+        },
+        setPollCount: (state, action: PayloadAction<number>) => {
+            state.pollCount = action.payload;
+        },
+        setKicked: (state) => {
+            state.kicked = true;
+        },
     },
 });
 
@@ -93,7 +108,10 @@ export const { connected,
     setUser,
     setTeacherStatus,
     setQuestion,
-    addMessage
+    addMessage,
+    setUsersOnline,
+    setPollCount,
+    setKicked
 } = socketSlice.actions;
 
 export default socketSlice.reducer;

@@ -1,6 +1,6 @@
 import { Middleware } from 'redux';
 import { io, Socket } from 'socket.io-client';
-import {connected, disconnected, setQuestion, setTeacherStatus, setUser, addMessage} from '../slices/socketSlice';
+import {connected, disconnected, setQuestion, setTeacherStatus, setUser, addMessage, setPollCount, setUsersOnline, setKicked} from '../slices/socketSlice';
 
 const socketMiddleware: Middleware = (store) => {
     let socket: Socket;
@@ -34,6 +34,18 @@ const socketMiddleware: Middleware = (store) => {
 
                 socket.on('chat-message', (message: any) => {
                     store.dispatch(addMessage(message));
+                });
+
+                socket.on('users-online-updated', (users: any[]) => {
+                    store.dispatch(setUsersOnline(users));
+                });
+
+                socket.on('poll-count-updated', (count: number) => {
+                    store.dispatch(setPollCount(count));
+                });
+
+                socket.on('kicked', () => {
+                    store.dispatch(setKicked());
                 });
 
                 break;
@@ -87,6 +99,12 @@ const socketMiddleware: Middleware = (store) => {
             case 'send-message':
                 if (socket) {
                     socket.emit('send-message', action.payload);
+                }
+                break;
+
+            case 'kick-student':
+                if (socket) {
+                    socket.emit('kick-student', action.payload);
                 }
                 break;
 
