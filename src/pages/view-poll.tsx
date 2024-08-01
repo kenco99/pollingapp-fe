@@ -7,7 +7,7 @@ const ViewPoll = () => {
     const dispatch = useDispatch();
     const router = useRouter();
     const { question, user_type } = useSelector((state) => state.socket);
-    const [timeLeft, setTimeLeft] = useState(120);
+    const [timeLeft, setTimeLeft] = useState(60);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -57,7 +57,7 @@ const ViewPoll = () => {
     const updateTimeLeft = () => {
         if (question && question.start_time) {
             const elapsedTime = Math.floor((Date.now() - new Date(question.start_time).getTime()) / 1000);
-            const newTimeLeft = Math.max(120 - elapsedTime, 0);
+            const newTimeLeft = Math.max(question.maximum_time - elapsedTime, 0);
             setTimeLeft(newTimeLeft);
         }
     };

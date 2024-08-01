@@ -14,6 +14,7 @@ const CreatePoll: React.FC = () => {
     const [options, setOptions] = useState<Option[]>([{ text: '', isCorrect: false }]);
     const [error, setError] = useState<string | null>(null);
     const { user_type, isTeacherOnline } = useAppSelector((state) => state.socket);
+    const [maximumTime, setMaximumTime] = useState<string>('');
 
     const handleQuestionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         setQuestion(e.target.value);
@@ -31,6 +32,10 @@ const CreatePoll: React.FC = () => {
             isCorrect: idx === index ? isCorrect : false,
         }));
         setOptions(newOptions);
+    };
+
+    const handleMaximumTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setMaximumTime(e.target.value);
     };
 
     const addOption = () => {
@@ -55,6 +60,7 @@ const CreatePoll: React.FC = () => {
         const pollData = {
             question,
             options,
+            maximum_time: maximumTime ? Number(maximumTime) : 60
         };
 
         dispatch({ type: 'create-poll', payload: pollData})
@@ -111,6 +117,15 @@ const CreatePoll: React.FC = () => {
                     >
                         Add another option +
                     </button>
+                    <div className="flex items-center px-4 rounded">
+                        <input
+                            type="number"
+                            value={maximumTime}
+                            onChange={handleMaximumTimeChange}
+                            placeholder="Time (seconds)"
+                            className="flex-grow p-2 border border-gray-300 rounded mr-2"
+                        />
+                    </div>
                     <button
                         onClick={handleSubmit}
                         className="bg-green-500 text-white px-4 py-2 rounded"

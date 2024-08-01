@@ -28,6 +28,7 @@ interface SocketState {
     tabID: string | null,
     user_id: string | null;
     user_type: 'teacher' | 'student' | null;
+    user_name: string | null;
 }
 
 const initialState: SocketState = {
@@ -37,7 +38,8 @@ const initialState: SocketState = {
     answer: null,
     tabID: null,
     user_id: null,
-    user_type: null
+    user_type: null,
+    user_name: null
 };
 
 const socketSlice = createSlice({
@@ -54,6 +56,7 @@ const socketSlice = createSlice({
         setUser: (state, action: PayloadAction<object>) => {
             state.user_type = action.payload?.user_type
             state.user_id = action.payload?.user_id
+            if(action.payload?.user_name) state.user_name = action.payload?.user_name
         },
         setTeacherStatus: (state, action: PayloadAction<boolean>) => {
             state.isTeacherOnline = action.payload

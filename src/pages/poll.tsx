@@ -6,7 +6,7 @@ const PollPage = () => {
     const dispatch = useDispatch();
     const { question, answer } = useSelector((state) => state.socket);
     const [selectedOption, setSelectedOption] = useState(null);
-    const [timeLeft, setTimeLeft] = useState(120);
+    const [timeLeft, setTimeLeft] = useState(60);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -42,7 +42,7 @@ const PollPage = () => {
     const updateTimeLeft = () => {
         if (!!question && question?.start_time) {
             const elapsedTime = Math.floor((Date.now() - new Date(question.start_time).getTime()) / 1000);
-            const newTimeLeft = Math.max(120 - elapsedTime, 0);
+            const newTimeLeft = Math.max(question.maximum_time - elapsedTime, 0);
             setTimeLeft(newTimeLeft);
         }
     };
@@ -99,17 +99,28 @@ const PollPage = () => {
                 <p className="mb-4">{question.question_text}</p>
                 <div className="space-y-2">
                     {question.options_db.map((option) => (
-                        <label key={option.id} className="flex items-center space-x-2">
-                            <input
-                                type="radio"
-                                name="option"
-                                value={option.id}
-                                checked={selectedOption === option.id}
-                                onChange={() => setSelectedOption(option.id)}
-                                className="form-radio"
-                            />
-                            <span>{option.option_text}</span>
-                        </label>
+                        <div
+                            key={option.id}
+                            className={`p-3 rounded-lg cursor-pointer transition-colors duration-200 ${
+                                selectedOption === option.id
+                                    ? 'bg-blue-500 text-white'
+                                    : 'bg-gray-100 hover:bg-gray-200'
+                            }`}
+                            onClick={() => setSelectedOption(option.id)}
+                        >
+                            <label className="flex items-center space-x-2 cursor-pointer">
+                                <input
+                                    type="radio"
+                                    name="option"
+                                    value={option.id}
+                                    checked={selectedOption === option.id}
+                                    onChange={() => {
+                                    }}
+                                    className="form-radio hidden"
+                                />
+                                <span>{option.option_text}</span>
+                            </label>
+                        </div>
                     ))}
                 </div>
                 <button
@@ -129,16 +140,20 @@ const PollPage = () => {
                 <h2 className="text-lg font-semibold mb-4">Polling results</h2>
                 <div className="space-y-2">
                     {question.options_db.map((option) => (
-                        <div key={option.id} className="flex items-center">
-                            <span className={`w-1/4 ${option.is_correct ? 'font-bold text-green-600' : ''} ${option.id === answer.current_answer ? 'underline' : ''}`}>
-                                {option.option_text}
-                                {option.is_correct && ' ✓'}
-                                {option.id === answer.current_answer && ' (Your answer)'}
-                            </span>
+                        <div
+                            key={option.id}
+                            className={`flex items-center p-2 rounded ${
+                                option.id === answer.current_answer ? 'bg-gray-100' : ''
+                            } ${option.is_correct ? 'bg-green-100' : ''}`}
+                        >
+                    <span className={`w-1/4 ${option.is_correct ? 'font-bold text-green-600' : ''}`}>
+                        {option.option_text}
+                        {option.is_correct && ' ✓'}
+                    </span>
                             <div className="w-3/4 bg-gray-200 rounded-full h-4">
                                 <div
                                     className={`h-4 rounded-full ${option.is_correct ? 'bg-green-500' : 'bg-blue-500'}`}
-                                    style={{ width: `${calculatePercentage(option.count, totalVotes)}%` }}
+                                    style={{width: `${calculatePercentage(option.count, totalVotes)}%`}}
                                 ></div>
                             </div>
                             <span className="ml-2">{calculatePercentage(option.count, totalVotes)}%</span>

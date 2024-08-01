@@ -33,14 +33,4 @@ export const getPollData = async (tabID: string): Promise<any> => {
     }
 };
 
-export const updateUserName = async (tabID: string, name: string): Promise<any> => {
-    try {
-        const response = await axiosInstance.put(`/pollapp/user?tabID=${tabID}&name=${name}`);
-        return response.data;
-    } catch (error) {
-        console.error('Error updating user name:', error);
-        throw error;
-    }
-};
-
 export default axiosInstance;

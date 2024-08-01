@@ -46,6 +46,12 @@ const socketMiddleware: Middleware = (store) => {
                 }
                 break;
 
+            case 'save-student-name':
+                if (socket) {
+                    socket.emit('save-student-name', action.payload)
+                }
+                break;
+
             case 'socket/disconnect':
                 if (socket) socket.disconnect();
                 break;

@@ -1,14 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useAppSelector } from '../hooks/reduxHooks';
-import { updateUserName } from '../api';
+import {useDispatch} from "react-redux";
 
 const StudentSignupPage: React.FC = () => {
     const router = useRouter();
+    const dispatch = useDispatch();
     const [name, setName] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const { socket } = useAppSelector((state) => state.socket);
+    const { socket, user_name } = useAppSelector((state) => state.socket);
+
+    useEffect(() => {
+        if(!!user_name) router.push('/poll');
+    }, [user_name]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -20,7 +25,8 @@ const StudentSignupPage: React.FC = () => {
                 if (!tabID) {
                     throw new Error('TabID not found in sessionStorage');
                 }
-                await updateUserName(tabID, name);
+
+                dispatch({type:'save-student-name', payload:name})
                 if (socket) {
                     socket.emit('is_student', { name, tabId: tabID });
                 }
